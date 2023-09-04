@@ -1,0 +1,43 @@
+Lecture 1:9/4/2023
+
+	Class Hierarchy:
+		
+		-Object //base class for all unreal objects
+
+		-Actor //objects that can be placed or spawned in the world
+
+		-Pawn //actors that can be controlled by players or AI
+				
+		-Character //pawn that implements walking movement
+					
+		-SCharacter //our first C++ calss(with our own prefix)
+
+		More:(https://www.tomlooman.com/unreal-engine-gameplay-framework/)
+
+	Class Prefixes:
+		
+		-U - Classing derived from U object
+		-A - derived from Actor
+		-F - STructs
+		-E - Enums
+		-I - Interfaces
+	
+	Unreal Propery System:
+		-Marked in C++ 
+		-Handles boiler plate
+
+		Changes:
+			-Acess in editor and blueprint
+			-Network behavior
+			-Memory management
+
+		More:
+			-Unreal’s Property System(https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection)
+			-UFUNCTION Examples(https://www.tomlooman.com/ue4-ufunction-keywords-explained/) 
+			-Property Specifiers(https://docs.unrealengine.com/en-US/Programming/UnrealArchitecture/Reference/Properties/Specifiers/index.html) 
+			-Function Specifiers(https://docs.unrealengine.com/en-US/Programming/UnrealArchitecture/Reference/Functions/Specifiers/index.html)
+
+	
+		
+
+	
