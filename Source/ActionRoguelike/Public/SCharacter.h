@@ -15,6 +15,12 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+protected:
+
+	//allows for assignment of ProjectileClass assigned in editor SCharacter>ProjectileClass
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
+
 public:
 	// Sets default values for this character's properties
 	ASCharacter();
@@ -33,6 +39,12 @@ protected:
 
 	//Tells how far from 0 to -1(done with provided Value)to move the player along z axis
 	void MoveForward(float Value);
+
+	//Tells how far from 0 to -1(done with provided Value)to move the player along x axis
+	void MoveRight(float Value);
+
+	//Triggers the use of Primary Attack
+	void PrimaryAttack();
 
 public:	
 	// Called every frame
