@@ -9,6 +9,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class USInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -17,22 +19,38 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 
 protected:
 
-	//allows for assignment of ProjectileClass assigned in editor SCharacter>ProjectileClass
-	UPROPERTY(EditAnywhere)
+	
+	//adds our projectile class to menus in editor under attack category to assign projectiles to
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	//creates a subclass of actor of ProjectileClass assigned in editor SCharacter>ProjectileClass
 	TSubclassOf<AActor> ProjectileClass;
+
+	//adds our Attack animation to menus in editor under attack category to assign attack animations to
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	//Variable for the name for are Primary Attack timer
+	FTimerHandle TimerHandle_PrimaryAttack;
 
 public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
 protected:
-	//the camera arm
+	//VisibleAnywhere makes visible in editor
 	UPROPERTY(VisibleAnywhere)
+	//the camera arm
 	USpringArmComponent* SpringArmComp;
 
-	//the camera
+	//VisibleAnywhere makes visible in editor
 	UPROPERTY(VisibleAnywhere)
+	//the camera following SCharacter
 	UCameraComponent * CameraComp;
+
+	//VisibleAnywhere makes visible in editor
+	UPROPERTY(VisibleAnywhere)
+	//Allows SCharacter to interact with object in the world
+	USInteractionComponent* InteractionComp;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,6 +63,12 @@ protected:
 
 	//Triggers the use of Primary Attack
 	void PrimaryAttack();
+
+	//Triggers the animation for Primary Attack
+	void PrimaryAttack_TimeElapsed();
+
+	//Triggers the use of interact
+	void PrimaryInteract();
 
 public:	
 	// Called every frame

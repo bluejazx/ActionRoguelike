@@ -21,17 +21,20 @@ public:
 
 protected:
 
-	//the component that will be used for collisions
+	//VisibleAnywhere makes visdible in editor
 	UPROPERTY(VisibleAnywhere)
-		USphereComponent* SphereComp;
+	//the physical body component that will be used for collisions
+	USphereComponent* SphereComp;
 
+	//VisibleAnywhere makes visdible in editor
+	UPROPERTY(VisibleAnywhere)
 	//Component that is given a velocity and travels in a straight line
-	UPROPERTY(VisibleAnywhere)
-		UProjectileMovementComponent* MovementComp;
+	UProjectileMovementComponent* MovementComp;
 
-	//Is what is shown in the world for the player 
+	//VisibleAnywhere makes visdible in editor
 	UPROPERTY(VisibleAnywhere)
-		UParticleSystemComponent* EffectComp;
+	//Is what is shown in the world for the player 
+	UParticleSystemComponent* EffectComp;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

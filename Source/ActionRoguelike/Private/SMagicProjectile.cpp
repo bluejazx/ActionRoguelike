@@ -12,13 +12,13 @@ ASMagicProjectile::ASMagicProjectile()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// sets the SphereComp as the root component of the projectile
+	//Creates then sets the SphereComp as the root component of the projectile
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	RootComponent = SphereComp;
 	// Sets collision physics to use Projectile profile
 	SphereComp->SetCollisionProfileName("Projectile");
 
-	// Attacth the EffectComp to the SphereComp so that they stay in sync
+	//Creates then Attacths the EffectComp to the SphereComp so that they stay in sync
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(SphereComp);
 
