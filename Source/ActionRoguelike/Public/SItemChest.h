@@ -24,13 +24,13 @@ public:
 
 protected:
 
-	//VisibleAnywhere makes visdible in editor
-	UPROPERTY(VisibleAnywhere)
+	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//Physical component for the bottom of the chest
 	UStaticMeshComponent* BaseMesh;
 
-	//VisibleAnywhere makes visdible in editor
-	UPROPERTY(VisibleAnywhere)
+	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//Physical component for the lid of the chest
 	UStaticMeshComponent* LidMesh;
 

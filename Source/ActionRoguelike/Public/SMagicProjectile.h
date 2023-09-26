@@ -21,18 +21,18 @@ public:
 
 protected:
 
-	//VisibleAnywhere makes visdible in editor
-	UPROPERTY(VisibleAnywhere)
+	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//the physical body component that will be used for collisions
 	USphereComponent* SphereComp;
 
-	//VisibleAnywhere makes visdible in editor
-	UPROPERTY(VisibleAnywhere)
+	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//Component that is given a velocity and travels in a straight line
 	UProjectileMovementComponent* MovementComp;
 
-	//VisibleAnywhere makes visdible in editor
-	UPROPERTY(VisibleAnywhere)
+	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//Is what is shown in the world for the player 
 	UParticleSystemComponent* EffectComp;
 

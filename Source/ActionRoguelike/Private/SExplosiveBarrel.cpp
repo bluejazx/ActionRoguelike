@@ -4,6 +4,7 @@
 #include "SExplosiveBarrel.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "DrawDebugHelpers.h"
 
 
 ASExplosiveBarrel::ASExplosiveBarrel()
@@ -44,9 +45,16 @@ void ASExplosiveBarrel::PostInitializeComponents()
 
 void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//fire impulse on hit when force comp is activated
+	//Fire impulse on hit when force comp is activated
 	ForceComp->FireImpulse();
 
-	// Logging  to make sure we reached the event
+	// Logging  to make sure we reached the event and provides debug information
 	UE_LOG(LogTemp, Log, TEXT("OnActorHit reached (ExplosiveBarrel)"));
+
+	//Logs the name of the actor that hit explosive barrel, and time it was hit
+	UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s,  at fame time: %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
+
+	//Prints a string with all the information form our debug logs
+	FString CombinedString = FString::Printf(TEXT("Hit at location %s"), *Hit.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
 }

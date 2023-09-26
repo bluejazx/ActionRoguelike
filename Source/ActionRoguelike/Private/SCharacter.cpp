@@ -158,16 +158,21 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	//Gets the hand location of SCharacter
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
+	//Checks to make sure that ProjectileClass is set in BP to assert if its not
+	if (ensureAlways(ProjectileClass))
+	{	
+		//assigns SpawnTM to a (rotation and location) we had (where SCharacter is looking and SCharacter's HandLocation)
+		FTransform SpawnTM = FTransform(GetActorRotation(), HandLocation);
 
-	//assigns SpawnTM to a (rotation and location) we had (where SCharacter is looking and SCharacter's HandLocation)
-	FTransform SpawnTM = FTransform(GetActorRotation(), HandLocation);
-
-	//Specifies the rules for spawning the PrimaryAttack(will spawn always)
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	//Spawns an actor of ProjectileClass assigned in SCharacter.h as a SubClassOf , then SpawnTM(location,rotation, and scale), SpawnParam(holds optional parameters)
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+		//Specifies the rules for spawning the PrimaryAttack(will spawn always)
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		//Sets SCharacter as the instigator for the projectile
+		SpawnParams.Instigator = this;
+	
+		//Spawns an actor of ProjectileClass assigned in SCharacter.h as a SubClassOf , then SpawnTM(location,rotation, and scale), SpawnParam(holds optional parameters)
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	}	
 }
 
 //Primary Interact trigger interaction event if object is intractable

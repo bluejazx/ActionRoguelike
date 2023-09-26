@@ -85,6 +85,7 @@ void USInteractionComponent::PrimaryInteract()
 			{
 				//cast MyOwner to a pawn to be passed when executing interact
 				APawn* MyPawn = Cast<APawn>(MyOwner);
+
 				//Executes Interaction on hit object Instigated the actor this component is attached to 
 				ISGameplayInterface::Execute_Interact(HitActor, MyPawn);
 				//added so that characters can only interact with one object at a time
@@ -92,9 +93,13 @@ void USInteractionComponent::PrimaryInteract()
 			}
 			
 		}
+
 		//draws sphere matching line color
 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
 	}
+
 	//draws line matching line color
 	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+
+
 }
