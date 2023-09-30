@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "SInteractionComponent.h"
+#include "SAttributeComponent.h"
 
 
 //Where you should  initialize variables and Create/setup components
@@ -29,7 +30,10 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	//Creates then Adds the InterrationComponent with the name "InteractionComp to SCharacter in the editor
-	InteractionComp = CreateDefaultSubobject< USInteractionComponent>("InteractionComp");
+	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+
+	//Creates then Adds the USAttributeComponent with the name "InteractionComp to SCharacter in the editor 
+	AttrributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
 	//Move the player in the direction SCHracter is facing
 	GetCharacterMovement()->bOrientRotationToMovement = true;

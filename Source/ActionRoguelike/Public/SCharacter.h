@@ -11,6 +11,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
 class UAnimMontage;
+class USAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -51,6 +52,12 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	//Allows SCharacter to interact with object in the world
 	USInteractionComponent* InteractionComp;
+
+	//VisibleAnywhere makes visible in editor, BlueprintReadOnly makes it readable in BP
+	//Category set to components in editor details panel
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "components")
+	//adds universal attribute class to SCharacter
+	USAttributeComponent* AttrributeComp;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

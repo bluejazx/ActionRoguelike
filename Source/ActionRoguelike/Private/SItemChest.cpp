@@ -11,7 +11,7 @@ ASItemChest::ASItemChest()
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	RootComponent = BaseMesh;
 
-	//Creates then attacthces the lid mesh to the base mesh
+	//Creates then attaches the lid mesh to the base mesh
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
 	LidMesh->SetupAttachment(BaseMesh);
 
@@ -22,7 +22,7 @@ ASItemChest::ASItemChest()
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	//Animates liud when interact is triggered
+	//Animates lid when interact is triggered
 	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
 }
 

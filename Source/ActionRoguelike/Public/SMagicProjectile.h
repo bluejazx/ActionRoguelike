@@ -21,6 +21,11 @@ public:
 
 protected:
 
+	//UFUNCTION allows us to bind to this function and trigger our event
+	UFUNCTION()
+	//this applies damage upon overlap of SMagicProjectile with something that has health
+	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//the physical body component that will be used for collisions
