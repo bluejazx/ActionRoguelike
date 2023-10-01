@@ -22,8 +22,8 @@ ASMagicProjectile::ASMagicProjectile()
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Checks for a nullptr
-	if (OtherActor)
+	//Checks for a nullptr and instigator
+	if (OtherActor && OtherActor != GetInstigator())
 	{
 		//gets the other actor attributes component
 		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));

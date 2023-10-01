@@ -28,6 +28,11 @@ protected:
 
 public:	
 
+	//callable in blueprint
+	UFUNCTION(BlueprintCallable)
+	//constant variable for IsAlive
+	bool IsAlive() const;
+
 	//BlueprintAssignable makes it Assignable in BP
 	UPROPERTY(BlueprintAssignable)
 	//event for when health has changed

@@ -45,6 +45,12 @@ ASCharacter::ASCharacter()
 	AttackAnimDelay = 0.2f;
 }
 
+void ASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	AttrributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+}
 
 //Binding Inputs
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -179,12 +185,6 @@ void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.Instigator = this;
 
-		//Sets Hit Result
-		FHitResult Hit;
-		FVector TraceStart = CameraComp->GetComponentLocation();
-		// endpoint far into the look-at distance (not too far, still adjust somewhat towards crosshair on a miss)
-		FVector TraceEnd = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
-
 		//Sets shape
 		FCollisionShape Shape;
 		Shape.SetSphere(20.0f);
@@ -199,19 +199,22 @@ void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
 		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
 
-		//Sets ProjRotation
-		FRotator ProjRotation;
-		// true if we got to a blocking hit (Alternative: SweepSingleByChannel with ECC_WorldDynamic)
+		FVector TraceStart = CameraComp->GetComponentLocation();
+
+		// endpoint far into the look-at distance (not too far, still adjust somewhat towards crosshair on a miss)
+		FVector TraceEnd = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
+
+		FHitResult Hit;
+
+		// returns true if we got to a blocking hit
 		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
 		{
-			// Adjust location to end up at crosshair look-at
-			ProjRotation = FRotationMatrix::MakeFromX(Hit.ImpactPoint - HandLocation).Rotator();
+			// Overwrite trace end with impact point in world
+			TraceEnd = Hit.ImpactPoint;
 		}
-		else
-		{
-			// Fall-back since we failed to find any blocking hit
-			ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
-		}
+
+		// find new direction/rotation from Hand pointing to impact point in world.
+		FRotator ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
 
 		//Sets SpawnTM 
 		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
@@ -231,5 +234,17 @@ void ASCharacter::PrimaryInteract()
 	}
 	
 }
+
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
+{
+	//Stops input when at 0 or less Health
+	if (NewHealth <= 0.0f && Delta < 0.0f)
+	{
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		DisableInput(PC);
+	}
+}
+
+
 
 

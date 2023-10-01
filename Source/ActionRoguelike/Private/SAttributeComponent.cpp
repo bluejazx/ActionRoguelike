@@ -9,6 +9,12 @@ USAttributeComponent::USAttributeComponent()
 	Health = 100;
 }
 
+bool USAttributeComponent::IsAlive() const
+{
+	//True while
+	return Health > 0.0f;
+}
+
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
 	//Adds delta to health 
@@ -17,7 +23,7 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 	//Broadcast event OnHealthChange
 	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
 
-	//reports sucess
+	//reports success
 	return true;
 }
 

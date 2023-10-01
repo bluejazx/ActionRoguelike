@@ -53,13 +53,6 @@ void ASProjectileBase::Explode_Implementation()
 		//Creates explosion effect
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 
-		//Deactivates EffectComp
-		EffectComp->DeactivateSystem();
-
-		//Stops MovementComp and further collisions
-		MoveComp->StopMovementImmediately();
-		SetActorEnableCollision(false);
-
 		//Destroys projectile
 		Destroy();
 	}

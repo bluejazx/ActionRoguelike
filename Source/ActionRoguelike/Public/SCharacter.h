@@ -104,6 +104,13 @@ protected:
 	//Function to preform interact
 	void PrimaryInteract();
 
+	UFUNCTION()
+	//Function for OnHealthChanged event
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
+	
+	//Function override for binding events
+	virtual void PostInitializeComponents() override;
+
 public:	
 
 	ASCharacter();
