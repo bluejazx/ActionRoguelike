@@ -7,12 +7,13 @@ ASItemChest::ASItemChest()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Creates then Sets the base mesh for the chest to the root component
+	//Creates BaseMesh as RootComp
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	RootComponent = BaseMesh;
 
-	//Creates then attaches the lid mesh to the base mesh
+	//Creates LidMesh
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
+	//Attaches LidMesh to BaseMesh
 	LidMesh->SetupAttachment(BaseMesh);
 
 	//Sets target pitch to a value
@@ -22,7 +23,7 @@ ASItemChest::ASItemChest()
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	//Animates lid when interact is triggered
+	//Animates lid 
 	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
 }
 

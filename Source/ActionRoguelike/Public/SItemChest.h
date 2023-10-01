@@ -24,14 +24,14 @@ public:
 
 protected:
 
-	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	//VisibleAnywhere readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//Physical component for the bottom of the chest
+	//Physical component 
 	UStaticMeshComponent* BaseMesh;
 
-	//VisibleAnywhere makes visible in editor and BlueprintReadOnly makes it readable in BP
+	//VisibleAnywhere readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//Physical component for the lid of the chest
+	//Physical component 
 	UStaticMeshComponent* LidMesh;
 
 	// Called when the game starts or when spawned

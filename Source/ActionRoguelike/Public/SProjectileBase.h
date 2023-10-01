@@ -6,21 +6,49 @@
 #include "GameFramework/Actor.h"
 #include "SProjectileBase.generated.h"
 
-UCLASS()
+class USphereComponent;
+class UProjectileMovementComponent;
+class UParticleSystemComponent;
+
+UCLASS(ABSTRACT) // 'ABSTRACT' marks this class as incomplete, keeping this out of certain dropdowns windows like SpawnActor in Unreal Editor
 class ACTIONROGUELIKE_API ASProjectileBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASProjectileBase();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//Only editable in BP in Effects 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UParticleSystem* ImpactVFX;
+
+	//Only editable in BP in Components 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	//Physical Sphere component
+	USphereComponent* SphereComp;
+
+	//Only editable in BP in Components
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	//Basic Movement component
+	UProjectileMovementComponent* MoveComp;
+
+	//Only editable in BP in Components
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	//Particle effects
+	UParticleSystemComponent* EffectComp;
+
+	UFUNCTION()
+	//creates a event for when Projectiles hit other actors
+	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	// BlueprintNativeEvent = C++ base implementation, can be expanded in Blueprints
+	// BlueprintCallable to allow child classes to trigger explosions
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Explode();
+
+	virtual void PostInitializeComponents() override;
+
+public:
+
+	ASProjectileBase();
 
 };

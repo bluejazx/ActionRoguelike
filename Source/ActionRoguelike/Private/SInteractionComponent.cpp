@@ -38,67 +38,67 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void USInteractionComponent::PrimaryInteract()
 {
-	//Creates list of Object type's we are checking for with the line trace then Adds WorldDynamic to the list
+	//Creates ObjectQueryParams
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 
-	//Finds what Actor this component is attached to
+	//Finds Owner
 	AActor* MyOwner = GetOwner();
 
 
 
-	//Get the viewpoint from attached actor eyes from eye location and rotation for variables
+	//Gets Viewpoint
 	FVector EyeLocation;
 	FRotator EyeRotation;
 	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-	//The trace ends in the direction we are facing from Eye location to a distance away
+	//Sets End
 	FVector End = EyeLocation + (EyeRotation.Vector() * 1000);
 
 	//For preforming the following trace but with more precision
 	//FHitResult Hit;
 	//bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
 
-	//Array for what our sphere trace hits in a sphere
+	//Array of Hits
 	TArray<FHitResult> Hits;
 
-	//radius of sphere
+	//Sets radius
 	float Radius = 30.f;
 
-	//makes our sphere for trace
+	//makes Sphere
 	FCollisionShape Shape;
 	Shape.SetSphere(Radius);
 
-	//Finds objects to interact in a sphere by sweeping from eye location to the end using ObejectQueryParams to find anything that can be interacted with
+	//Finds objects Blocking
 	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
 
-	//makes trace red if nothing was hit otherwise if something was hit trace is green
+	//makes trace red or green
 	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 
 	for (FHitResult Hit : Hits)
 	{
-		//Gets the actor that was hit and validates Hit object to avoid nullptr
+		//Check for nullptr
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor)
 		{
-			//make sure the Hit object can be interacted with
+			//Check for InteractionComp
 			if (HitActor->Implements<USGameplayInterface>())
 			{
-				//cast MyOwner to a pawn to be passed when executing interact
+				//cast MyOwner 
 				APawn* MyPawn = Cast<APawn>(MyOwner);
 
-				//Executes Interaction on hit object Instigated the actor this component is attached to 
+				//Executes Interaction
 				ISGameplayInterface::Execute_Interact(HitActor, MyPawn);
-				//added so that characters can only interact with one object at a time
+				//Allows one Interaction
 				break;
 			}
 			
 		}
 
-		//draws sphere matching line color
+		//draws sphere 
 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
 	}
 
-	//draws line matching line color
+	//draws line 
 	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
 
 

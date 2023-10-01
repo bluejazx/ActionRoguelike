@@ -2,26 +2,71 @@
 
 
 #include "SProjectileBase.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 
-// Sets default values
+
 ASProjectileBase::ASProjectileBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//Creates a SphereComp
+	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	//Sets collision profile to Projectile
+	SphereComp->SetCollisionProfileName("Projectile");
+	//Creates Event when sphere component hits another actor
+	SphereComp->OnComponentHit.AddDynamic(this, &ASProjectileBase::OnActorHit);
+	//Sets RootComp to SphereComp
+	RootComponent = SphereComp;
+
+	//Creates EffectComp
+	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
+	//Attaches to SphereComp
+	EffectComp->SetupAttachment(RootComponent);
+
+	//Creates MovementComp
+	MoveComp = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMoveComp");
+	//Makes Velocity follow rotation
+	MoveComp->bRotationFollowsVelocity = true;
+	//Sets and creates initial values for velocity and gravity
+	MoveComp->bInitialVelocityInLocalSpace = true;
+	MoveComp->ProjectileGravityScale = 0.0f;
+	MoveComp->InitialSpeed = 8000;
 
 }
 
-// Called when the game starts or when spawned
-void ASProjectileBase::BeginPlay()
+//Projectile hits other actor Event
+void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Super::BeginPlay();
-	
+	//Triggers explode function
+	Explode();
 }
 
-// Called every frame
-void ASProjectileBase::Tick(float DeltaTime)
+
+//Implementation from it being marked as BlueprintNativeEvent
+void ASProjectileBase::Explode_Implementation()
 {
-	Super::Tick(DeltaTime);
+	// Check to make sure we aren't already being 'destroyed'
+	// Adding ensure to see if we encounter this situation at all
+	if (ensure(!IsPendingKill()))
+	{
+		//Creates explosion effect
+		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 
+		//Deactivates EffectComp
+		EffectComp->DeactivateSystem();
+
+		//Stops MovementComp and further collisions
+		MoveComp->StopMovementImmediately();
+		SetActorEnableCollision(false);
+
+		//Destroys projectile
+		Destroy();
+	}
 }
 
+void ASProjectileBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	//SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
+}

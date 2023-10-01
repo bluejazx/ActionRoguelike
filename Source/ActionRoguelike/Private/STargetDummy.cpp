@@ -8,7 +8,7 @@
 // Sets default values
 ASTargetDummy::ASTargetDummy()
 {
-	//Creates a static MeshComp
+	//Creates MeshComp
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
 	//Sets MeshComp to RootComp
 	RootComponent = MeshComp;

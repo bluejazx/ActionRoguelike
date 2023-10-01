@@ -21,65 +21,92 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 protected:
 
 	
-	//adds our projectile class to menus in editor under attack category to assign projectiles to
+	//Editable anywhere in attack
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	//creates a subclass of actor of ProjectileClass assigned in editor SCharacter>ProjectileClass
+	//creates a subclass 
 	TSubclassOf<AActor> ProjectileClass;
 
-	//adds our Attack animation to menus in editor under attack category to assign attack animations to
+	//Editable anywhere in attack
 	UPROPERTY(EditAnywhere, Category = "Attack")
+	//creates a subclass 
+	TSubclassOf<AActor> BlackHoleProjectileClass;
+
+	//Editable anywhere in attack
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	//creates a subclass 
+	TSubclassOf<AActor> DashProjectileClass;
+
+	//Editable anywhere in attack
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	//Attack animations
 	UAnimMontage* AttackAnim;
 
-	//Variable for the name for are Primary Attack timer
+	//PrimaryAttack timer
 	FTimerHandle TimerHandle_PrimaryAttack;
 
-public:
-	// Sets default values for this character's properties
-	ASCharacter();
+	//BlackholeAttack Timer
+	FTimerHandle TimerHandle_BlackholeAttack;
 
-protected:
-	//VisibleAnywhere makes visible in editor
+	//Dash Timer
+	FTimerHandle TimerHandle_Dash;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	//Variable for AttackAnimDelay
+	float AttackAnimDelay;
+
+	//Visible in editor
 	UPROPERTY(VisibleAnywhere)
 	//the camera arm
 	USpringArmComponent* SpringArmComp;
 
-	//VisibleAnywhere makes visible in editor
+	//Visible in editor
 	UPROPERTY(VisibleAnywhere)
 	//the camera following SCharacter
 	UCameraComponent * CameraComp;
 
-	//VisibleAnywhere makes visible in editor
+	//Visible in editor
 	UPROPERTY(VisibleAnywhere)
 	//Allows SCharacter to interact with object in the world
 	USInteractionComponent* InteractionComp;
 
-	//VisibleAnywhere makes visible in editor, BlueprintReadOnly makes it readable in BP
-	//Category set to components in editor details panel
+	//Visible in editor BP readable in components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "components")
 	//adds universal attribute class to SCharacter
 	USAttributeComponent* AttrributeComp;
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	//Tells how far from 0 to -1(done with provided Value)to move the player along z axis
+	//Function to move along z(forward/back)
 	void MoveForward(float Value);
 
-	//Tells how far from 0 to -1(done with provided Value)to move the player along x axis
+	//Function to move along x(right/left)
 	void MoveRight(float Value);
 
-	//Triggers the use of Primary Attack
+	//Function to begin PrimaryAttack
 	void PrimaryAttack();
 
-	//Triggers the animation for Primary Attack
+	//Function to preform Primary Attack
 	void PrimaryAttack_TimeElapsed();
 
-	//Triggers the use of interact
+	//Function to begin BlackHoleAttack
+	void BlackHoleAttack();
+
+	//Function to preform BlackholeAttack_TimeElapsed
+	void BlackholeAttack_TimeElapsed();
+
+	//Function to begin Dash
+	void Dash();
+
+	//Function to preform Dash_TimeElapsed
+	void Dash_TimeElapsed();
+
+	// Re-use spawn logic between attacks
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
+
+	//Function to preform interact
 	void PrimaryInteract();
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	ASCharacter();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

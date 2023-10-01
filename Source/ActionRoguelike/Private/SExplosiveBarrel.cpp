@@ -9,26 +9,29 @@
 
 ASExplosiveBarrel::ASExplosiveBarrel()
 {
-	//Creates then attaches a mesh comp with physics as the root component
+	//Creates MeshComp
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
+	//Sets physics
 	MeshComp->SetSimulatePhysics(true);
+	//Sets RootComp to MeshComp
 	RootComponent = MeshComp;
 
-	//Cretaes then attaches a force comp to the mesh comp
+	//Creates ForceComp
 	ForceComp = CreateDefaultSubobject<URadialForceComponent>("ForceComp");
+	//Attaches ForceComp
 	ForceComp->SetupAttachment(MeshComp);
 
 	// Leaving this on applies small constant force via component 'tick' (Optional)
 	ForceComp->SetAutoActivate(false);
 
-	//Sets the Rasius and stregnth for the force comp
+	//Sets the Radius and Strength of ForceComp
 	ForceComp->Radius = 750.0f;
 	ForceComp->ImpulseStrength = 2500.0f; // Alternative: 200000.0 if bImpulseVelChange = false
 	// Optional, ignores 'Mass' of other objects (if false, the impulse strength will be much higher to push most objects depending on Mass)
 	ForceComp->bImpulseVelChange = true;
 
 	// Optional, default constructor of component already adds 4 object types to affect, excluding WorldDynamic
-	//Excludes world dynamic from collision chanel
+	//Excludes world dynamic from collisions
 	ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
 }
 
@@ -38,14 +41,14 @@ void ASExplosiveBarrel::PostInitializeComponents()
 	// Don't forget to call parent function
 	Super::PostInitializeComponents();
 
-	//Activates force comp when the mesh comp is hit
+	//Activates ForceComp on hit
 	MeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActorHit);
 }
 
 
 void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//Fire impulse on hit when force comp is activated
+	//Fire impulse on hit 
 	ForceComp->FireImpulse();
 
 	// Logging  to make sure we reached the event and provides debug information

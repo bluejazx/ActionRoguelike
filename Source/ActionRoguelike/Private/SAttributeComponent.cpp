@@ -11,13 +11,13 @@ USAttributeComponent::USAttributeComponent()
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
-	//Adds the value of delta to health 
+	//Adds delta to health 
 	Health += Delta;
 
-	//Broadcast event OnHealthChange to what it concerns
+	//Broadcast event OnHealthChange
 	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
 
-	//tell us whether this change is successful
+	//reports sucess
 	return true;
 }
 

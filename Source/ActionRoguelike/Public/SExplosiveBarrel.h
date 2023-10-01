@@ -24,18 +24,18 @@ protected:
 
 	//VisibleAnywhere makes visible in editor
 	UPROPERTY(VisibleAnywhere)
-	//Physical body of the barrel component that will be used for collisions
+	//Physical body
 	UStaticMeshComponent* MeshComp;
 
-	//VisibleAnywhere makes visible in editor BlueprintReadOnly allows the BP compiler to read data from this component
+	//VisibleAnywhere readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//Applies force to other objects in the world when the barrel explodes
+	//ForceComp
 	URadialForceComponent* ForceComp;
 
 	virtual void PostInitializeComponents() override;
 
 	// Must be marked with UFUNCTION in order to 'bind' the event
 	UFUNCTION()
-		void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };

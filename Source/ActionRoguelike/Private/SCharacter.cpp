@@ -10,70 +10,39 @@
 #include "SAttributeComponent.h"
 
 
-//Where you should  initialize variables and Create/setup components
 // Sets default values
 ASCharacter::ASCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Creates then Adds the SpringArmComponent with the name "SpringArmComp" to SCharacter in the editor
+	//Creates SpringArmComp in 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
-	//Allows  for the camera to follow and update on controller(mouse) vertical inputs
+	//SpringArmComp use this characters rotation
 	SpringArmComp->bUsePawnControlRotation = true;
-	//Attaches the SpringArmComp to SCharacter Root
+	//Attaches SpringArmComp to 
 	SpringArmComp->SetupAttachment(RootComponent);
 
-	//Creates then Adds the CameraComponent with the name "SpringArmComp" to SCharacter in the editor
+	//Creates CameraComp
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
-	//Attaches the CameraComp to SpringArmComp
+	//Attaches CameraComp to SpringArmComp
 	CameraComp->SetupAttachment(SpringArmComp);
 
-	//Creates then Adds the InterrationComponent with the name "InteractionComp to SCharacter in the editor
+	//Creates InteractionComp
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
-	//Creates then Adds the USAttributeComponent with the name "InteractionComp to SCharacter in the editor 
+	//Creates AttributeComp
 	AttrributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
-	//Move the player in the direction SCHracter is facing
+	//Moves in direction this character is facing
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	//Allows for RPG(souls-like) camera where player can look into the camera  without changing the direction the player is looking 
 	//By rotating to the direction of input
 	bUseControllerRotationYaw = false;
-}
 
-//Where you want to initialize timers
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ASCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	// This is entirely optional, it draws two arrows to visualize rotations of the player
-	// -- Rotation Visualization -- //
-	const float DrawScale = 100.0f;
-	const float Thickness = 5.0f;
-
-	//Starts line at SCharacters location
-	FVector LineStart = GetActorLocation();
-	// Offset to the right of pawn
-	LineStart += GetActorRightVector() * 100.0f;
-	// Set line end in direction of the SCharacters forward
-	FVector ActorDirection_LineEnd = LineStart + (GetActorForwardVector() * 100.0f);
-	// Draw SCharacters Direction inputs
-	DrawDebugDirectionalArrow(GetWorld(), LineStart, ActorDirection_LineEnd, DrawScale, FColor::Yellow, false, 0.0f, 0, Thickness);
-
-	FVector ControllerDirection_LineEnd = LineStart + (GetControlRotation().Vector() * 100.0f);
-	// Draw Camera Rotation of SCharacters
-	DrawDebugDirectionalArrow(GetWorld(), LineStart, ControllerDirection_LineEnd, DrawScale, FColor::Green, false, 0.0f, 0, Thickness);
-
+	//Sets AttackAnimDelay
+	AttackAnimDelay = 0.2f;
 }
 
 
@@ -82,48 +51,50 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//Allows SCharacter to move along z axis(forward/back using W/S set in editor project settings>Input>axis mappings>MoveForward) using MoveFoward funtion
+	//Allows SCharacter to move along z axis(forward/back) with W/S 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
-	//Allows SCharacter to move along z axis(forward/back using D/A set in editor project settings>Input>axis mappings>MoveRight) using MoveFoward funtion
+	//Allows SCharacter to move along x axis(left/right) with D/A 
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
 
-	//Allows SCharacter to turn with horizontal controller(mouse) movement
-	//Also enabled in blueprint through 'use control rotation yaw' in Pawn
+	//Turn this character with Vertical/Horizontal(Yaw/Pitch) mouse inputs
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	//Allows SCharacter to turn with vertical controller(mouse) movement
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	//Binds PrimaryAttack left mouse in ProjectSetting(setting>Input>action mappings>PrimaryAttack>Left Mouse)
+	//Binds PrimaryAttack(left mouse)
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
-	//Binds Interact to E n ProjectSetting(setting>Input>action mappings>Interact>E)
+	//Binds SecondaryAttack(Q)
+	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &ASCharacter::BlackHoleAttack);
+
+	//Binds Dash(E)
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ASCharacter::Dash);
+
+	//Binds Interact(F)
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 
-	//Binds Jump to space bar set in ProjectSetting(setting>Input>action mappings>Jump>Space)
+	//Binds Jump(Space)
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
 
 
-//Movement 
 
-//forward and backwards movement
 void ASCharacter::MoveForward(float Value)
 {
-	//Makes variable of SCharacters control rotation
+	//Variable for rotation
 	FRotator ControlRot = GetControlRotation();
-	//Makes sure before using ControlRot.Vector we cant move into the floor(pitch) or sky(Yaw) by setting there vectors to zero before taking the input
+	//Variable for Pitch and Roll
 	ControlRot.Pitch = 0.0f;
 	ControlRot.Roll = 0.0f;
 
-	//Says what direction we want to move(We used ControlRot.Vector() which is the direction SCharacter is facing)and Value which is how far(triggered by W=1 or S=-1)
+	//moves in direction along z
 	AddMovementInput(ControlRot.Vector(), Value);
 }
 
-//left and right movement
+
 void ASCharacter::MoveRight(float Value)
 {
-	//Makes variable of SCharacters control rotation
+	//Variable for rotation
 	FRotator ControlRot = GetControlRotation();
-	//Makes sure before using ControlRot.Vector we cant move into the floor(pitch) or sky(Yaw) by setting there vectors to zero before taking the input
+	//Variable for Pitch and Roll
 	ControlRot.Pitch = 0.0f;
 	ControlRot.Roll = 0.0f;
 
@@ -131,23 +102,21 @@ void ASCharacter::MoveRight(float Value)
 	// Y = Right (Green)
 	// Z = Up (Blue)
 
-	//Gets the right axis of the controller rotator and sets it to the RightVector
+	//Sets RightVector to right axis
 	FVector RightVector = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
 
-	//Says what direction we want to move(We used RightVector which is the direction right of where SCharacter is facing)and Value which is how far(triggered by D=1 or A=-1)
+	//moves in direction along x
 	AddMovementInput(RightVector, Value);
 }
 
 
-//Actions
-
 //Trigger Primary attack Animation then spawn projectile
 void ASCharacter::PrimaryAttack()
 {
-	//Plays attack animation
+	//Plays AttackAnim
 	PlayAnimMontage(AttackAnim);
 
-	//Sets the timer for are attack animation so are projectile spawns at the end of the animation
+	//Sets AttackAnim timer
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
 
 	//Clears the timer handle if SCharacter dies
@@ -159,32 +128,104 @@ void ASCharacter::PrimaryAttack()
 //Triggered by PrimaryAttack() once the Primary attack animation is finished after 0.2f and spawns projectile
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	//Gets the hand location of SCharacter
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-
-	//Checks to make sure that ProjectileClass is set in BP to assert if its not
-	if (ensureAlways(ProjectileClass))
-	{	
-		//assigns SpawnTM to a (rotation and location) we had (where SCharacter is looking and SCharacter's HandLocation)
-		FTransform SpawnTM = FTransform(GetActorRotation(), HandLocation);
-
-		//Specifies the rules for spawning the PrimaryAttack(will spawn always)
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		//Sets SCharacter as the instigator for the projectile
-		SpawnParams.Instigator = this;
-	
-		//Spawns an actor of ProjectileClass assigned in SCharacter.h as a SubClassOf , then SpawnTM(location,rotation, and scale), SpawnParam(holds optional parameters)
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-	}	
+	//spawns PrimaryAttack
+	SpawnProjectile(ProjectileClass);
 }
 
-//Primary Interact trigger interaction event if object is intractable
+
+void ASCharacter::BlackHoleAttack()
+{
+	//Plays AttackAnim
+	PlayAnimMontage(AttackAnim);
+
+	//Sets AttackAnim timer
+	GetWorldTimerManager().SetTimer(TimerHandle_BlackholeAttack, this, &ASCharacter::BlackholeAttack_TimeElapsed, AttackAnimDelay);
+}
+
+
+void ASCharacter::BlackholeAttack_TimeElapsed()
+{
+	//spawns BlackholeAttack
+	SpawnProjectile(BlackHoleProjectileClass);
+}
+
+
+void ASCharacter::Dash()
+{
+	//Plays AttackAnim
+	PlayAnimMontage(AttackAnim);
+
+	//Sets AttackAnim timer
+	GetWorldTimerManager().SetTimer(TimerHandle_Dash, this, &ASCharacter::Dash_TimeElapsed, AttackAnimDelay);
+}
+
+
+void ASCharacter::Dash_TimeElapsed()
+{
+	//spawns DashProjectile
+	SpawnProjectile(DashProjectileClass);
+}
+
+
+void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
+{
+	if (ensureAlways(ClassToSpawn))
+	{
+		//Sets HandLocation
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+		//Sets SpawnParams
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+
+		//Sets Hit Result
+		FHitResult Hit;
+		FVector TraceStart = CameraComp->GetComponentLocation();
+		// endpoint far into the look-at distance (not too far, still adjust somewhat towards crosshair on a miss)
+		FVector TraceEnd = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
+
+		//Sets shape
+		FCollisionShape Shape;
+		Shape.SetSphere(20.0f);
+
+		//Ignores Player
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+		//Sets CollisionObjectQueryParams
+		FCollisionObjectQueryParams ObjParams;
+		ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
+		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
+
+		//Sets ProjRotation
+		FRotator ProjRotation;
+		// true if we got to a blocking hit (Alternative: SweepSingleByChannel with ECC_WorldDynamic)
+		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
+		{
+			// Adjust location to end up at crosshair look-at
+			ProjRotation = FRotationMatrix::MakeFromX(Hit.ImpactPoint - HandLocation).Rotator();
+		}
+		else
+		{
+			// Fall-back since we failed to find any blocking hit
+			ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
+		}
+
+		//Sets SpawnTM 
+		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
+		GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParams);
+	}
+}
+
+
 void ASCharacter::PrimaryInteract()
 {
+	//Checks for interact ability
 	if (InteractionComp)
 	{
-		//calls interact on the interact comp
+		//calls interact 
 		InteractionComp->PrimaryInteract();
 
 	}
