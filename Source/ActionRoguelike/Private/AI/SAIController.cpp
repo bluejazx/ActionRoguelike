@@ -11,14 +11,9 @@ void ASAIController::BeginPlay()
 
 	RunBehaviorTree(BehaviorTree);
 
-	//Gets PlayerCharacter Location
-	APawn* MyPawn = UGameplayStatics::GetPlayerPawn(this, 0);
-	//Check for null
-	if (MyPawn)
+	//ensures nullptr for BehaviorTree and displays corresponding message
+	if (ensureMsgf(BehaviorTree, TEXT("Behavior Tree is nullptr! Please assign BehaviorTree in your AI Controller.")))
 	{
-		//Sets move to location value in BB
-		GetBlackboardComponent()->SetValueAsVector("MoveToLocation", MyPawn->GetActorLocation());
-
-		GetBlackboardComponent()->SetValueAsObject("TargetActor", MyPawn);
+		RunBehaviorTree(BehaviorTree);
 	}
 }
