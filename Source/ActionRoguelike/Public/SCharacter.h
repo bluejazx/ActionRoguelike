@@ -23,10 +23,10 @@ protected:
 
 	/* VisibleAnywhere = read-only, still useful to view in-editor and enforce a convention. */
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
-		FName TimeToHitParamName;
+	FName TimeToHitParamName;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
-		FName HandSocketName;
+	FName HandSocketName;
 	
 	//Editable anywhere in attack
 	UPROPERTY(EditAnywhere, Category = "Attack")
