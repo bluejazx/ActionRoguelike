@@ -8,6 +8,7 @@
 
 
 class UPawnSensingComponent;
+class USAttributeComponent;
 
 
 UCLASS()
@@ -21,6 +22,11 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+	FName TimeToHitParamName;
+
+	void SetTargetActor(AActor* NewTarget);
+
 	virtual void PostInitializeComponents() override;
 
 	//Visible in Components
@@ -28,7 +34,13 @@ protected:
 	//Basic sensing for AI
 	UPawnSensingComponent* PawnSensingComp;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USAttributeComponent* AttributeComp;
+
 	UFUNCTION()
 	//When AI sees Player
 	void OnPawnSeen(APawn* Pawn);
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 };

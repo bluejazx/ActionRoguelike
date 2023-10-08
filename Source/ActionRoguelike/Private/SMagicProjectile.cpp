@@ -31,7 +31,7 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		if (AttributeComp)
 		{
 			// subtracts DamageAmount to apply the change as damage, not healing
-			AttributeComp->ApplyHealthChange(-DamageAmount);
+			AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
 
 			// Only explode when we hit something valid
 			Explode();

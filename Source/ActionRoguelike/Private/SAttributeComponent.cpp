@@ -3,6 +3,8 @@
 
 #include "SAttributeComponent.h"
 
+
+
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
 {
@@ -29,7 +31,7 @@ float USAttributeComponent::GetHealthMax() const
 	return HealthMax;
 }
 
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	//Sets old health
 	float OldHealth = Health;
@@ -39,9 +41,29 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 
 	//Subtracts old health form max health to get delta
 	float ActualDelta = Health - OldHealth;
-	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta); // @fixme: Still nullptr for InstigatorActor parameter
+	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
 	return ActualDelta != 0;
 }
 
+USAttributeComponent* USAttributeComponent::GetAttributes(AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return FromActor->FindComponentByClass<USAttributeComponent>();
+	}
+
+	return nullptr;
+}
+
+bool USAttributeComponent::IsActorAlive(AActor* Actor)
+{
+	USAttributeComponent* AttributeComp = GetAttributes(Actor);
+	if (AttributeComp)
+	{
+		return AttributeComp->IsAlive();
+	}
+
+	return false;
+}
 
