@@ -25,6 +25,7 @@ protected:
 
 	//Visible in Components
 	UPROPERTY(VisibleAnywhere, Category = "Components")
+	//Basic sensing for AI
 	UPawnSensingComponent* PawnSensingComp;
 
 	UFUNCTION()

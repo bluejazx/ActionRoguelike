@@ -18,6 +18,7 @@ void ASAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	//Sets PawnSensingComp to activate when player is spotted
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &ASAICharacter::OnPawnSeen);
 }
 

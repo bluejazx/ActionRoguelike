@@ -26,12 +26,28 @@ protected:
 	//variable for health attribute
 	float Health;
 
+	//Edit defaults only makes the variable only editable through BP panel, BlueprintReadOnly makes it readable in BP.
+	//category is set to attributes in the details panel
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	//variable for max health attribute
+	float HealthMax;
+
 public:	
 
 	//callable in blueprint
 	UFUNCTION(BlueprintCallable)
 	//constant variable for IsAlive
 	bool IsAlive() const;
+
+	//callable in blueprint
+	UFUNCTION(BlueprintCallable)
+	//bool for is health at max
+	bool IsFullHealth() const;
+
+	//callable in blueprint
+	UFUNCTION(BlueprintCallable)
+	//gets max health
+	float GetHealthMax() const;
 
 	//BlueprintAssignable makes it Assignable in BP
 	UPROPERTY(BlueprintAssignable)

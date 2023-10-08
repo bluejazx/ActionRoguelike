@@ -11,7 +11,7 @@ void ASAIController::BeginPlay()
 
 	RunBehaviorTree(BehaviorTree);
 
-	//ensures nullptr for BehaviorTree and displays corresponding message
+	//ensures  BehaviorTree isn't null and displays corresponding message
 	if (ensureMsgf(BehaviorTree, TEXT("Behavior Tree is nullptr! Please assign BehaviorTree in your AI Controller.")))
 	{
 		RunBehaviorTree(BehaviorTree);

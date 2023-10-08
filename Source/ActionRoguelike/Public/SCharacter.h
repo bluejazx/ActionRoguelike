@@ -12,6 +12,7 @@ class USpringArmComponent;
 class USInteractionComponent;
 class UAnimMontage;
 class USAttributeComponent;
+class UParticleSystem;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -20,6 +21,12 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 
 protected:
 
+	/* VisibleAnywhere = read-only, still useful to view in-editor and enforce a convention. */
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+		FName TimeToHitParamName;
+
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
+		FName HandSocketName;
 	
 	//Editable anywhere in attack
 	UPROPERTY(EditAnywhere, Category = "Attack")
@@ -41,6 +48,10 @@ protected:
 	//Attack animations
 	UAnimMontage* AttackAnim;
 
+	/* Particle System played during attack animation */
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UParticleSystem* CastingEffect;
+
 	//PrimaryAttack timer
 	FTimerHandle TimerHandle_PrimaryAttack;
 
@@ -50,6 +61,7 @@ protected:
 	//Dash Timer
 	FTimerHandle TimerHandle_Dash;
 
+	//Editable in attack
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	//Variable for AttackAnimDelay
 	float AttackAnimDelay;
@@ -97,6 +109,8 @@ protected:
 
 	//Function to preform Dash_TimeElapsed
 	void Dash_TimeElapsed();
+
+	void StartAttackEffects();
 
 	// Re-use spawn logic between attacks
 	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);

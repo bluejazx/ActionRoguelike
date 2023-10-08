@@ -6,7 +6,9 @@
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
 {
-	Health = 100;
+	//Sets HealthMax and Health
+	HealthMax = 100;
+	Health = HealthMax;
 }
 
 bool USAttributeComponent::IsAlive() const
@@ -15,16 +17,31 @@ bool USAttributeComponent::IsAlive() const
 	return Health > 0.0f;
 }
 
+bool USAttributeComponent::IsFullHealth() const
+{
+	//checks if health is at max
+	return Health == HealthMax;
+}
+
+
+float USAttributeComponent::GetHealthMax() const
+{
+	return HealthMax;
+}
+
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
-	//Adds delta to health 
-	Health += Delta;
+	//Sets old health
+	float OldHealth = Health;
 
-	//Broadcast event OnHealthChange
-	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
+	//Sets current health to add delta clamped between 0 and max health
+	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
-	//reports success
-	return true;
+	//Subtracts old health form max health to get delta
+	float ActualDelta = Health - OldHealth;
+	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta); // @fixme: Still nullptr for InstigatorActor parameter
+
+	return ActualDelta != 0;
 }
 
 
