@@ -125,6 +125,8 @@ protected:
 	//Function override for binding events
 	virtual void PostInitializeComponents() override;
 
+	virtual FVector GetPawnViewLocation() const override;
+
 public:	
 
 	ASCharacter();

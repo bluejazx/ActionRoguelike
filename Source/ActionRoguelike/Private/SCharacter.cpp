@@ -56,6 +56,11 @@ void ASCharacter::PostInitializeComponents()
 	AttrributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	return CameraComp->GetComponentLocation();
+}
+
 //Binding Inputs
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

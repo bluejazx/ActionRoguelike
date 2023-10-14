@@ -6,6 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -25,14 +26,10 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 	//Checks for a nullptr and instigator
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		//gets the other actor attributes component
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		//checks for a attributeComp on actor isn't null
-		if (AttributeComp)
+		
+		// Apply Damage & Impulse
+		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
-			// subtracts DamageAmount to apply the change as damage, not healing
-			AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
-
 			// Only explode when we hit something valid
 			Explode();
 		}
