@@ -51,6 +51,9 @@ public:
 	//bool for is health at max
 	bool IsFullHealth() const;
 
+	UFUNCTION(BlueprintCallable)
+	float GetHealth() const;
+
 	//callable in blueprint
 	UFUNCTION(BlueprintCallable)
 	//gets max health
