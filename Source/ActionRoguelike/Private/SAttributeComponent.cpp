@@ -13,6 +13,11 @@ USAttributeComponent::USAttributeComponent()
 	Health = HealthMax;
 }
 
+bool USAttributeComponent::Kill(AActor* InstigatorActor)
+{
+	return ApplyHealthChange(InstigatorActor, -GetHealthMax());
+}
+
 bool USAttributeComponent::IsAlive() const
 {
 	//True while
@@ -37,6 +42,12 @@ float USAttributeComponent::GetHealthMax() const
 
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
+
+	if (!GetOwner()->CanBeDamaged())
+	{
+		return false;
+	}
+
 	//Sets old health
 	float OldHealth = Health;
 
