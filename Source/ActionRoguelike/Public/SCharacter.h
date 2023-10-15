@@ -13,6 +13,7 @@ class USInteractionComponent;
 class UAnimMontage;
 class USAttributeComponent;
 class UParticleSystem;
+class USActionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -24,47 +25,6 @@ protected:
 	/* VisibleAnywhere = read-only, still useful to view in-editor and enforce a convention. */
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	FName TimeToHitParamName;
-
-	UPROPERTY(VisibleAnywhere, Category = "Effects")
-	FName HandSocketName;
-	
-	//Editable anywhere in attack
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	//creates a subclass 
-	TSubclassOf<AActor> ProjectileClass;
-
-	//Editable anywhere in attack
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	//creates a subclass 
-	TSubclassOf<AActor> BlackHoleProjectileClass;
-
-	//Editable anywhere in attack
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	//creates a subclass 
-	TSubclassOf<AActor> DashProjectileClass;
-
-	//Editable anywhere in attack
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	//Attack animations
-	UAnimMontage* AttackAnim;
-
-	/* Particle System played during attack animation */
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UParticleSystem* CastingEffect;
-
-	//PrimaryAttack timer
-	FTimerHandle TimerHandle_PrimaryAttack;
-
-	//BlackholeAttack Timer
-	FTimerHandle TimerHandle_BlackholeAttack;
-
-	//Dash Timer
-	FTimerHandle TimerHandle_Dash;
-
-	//Editable in attack
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-	//Variable for AttackAnimDelay
-	float AttackAnimDelay;
 
 	//Visible in editor
 	UPROPERTY(VisibleAnywhere)
@@ -86,34 +46,27 @@ protected:
 	//adds universal attribute class to SCharacter
 	USAttributeComponent* AttrributeComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USActionComponent* ActionComp;
+
 	//Function to move along z(forward/back)
 	void MoveForward(float Value);
 
 	//Function to move along x(right/left)
 	void MoveRight(float Value);
 
+	void SprintStart();
+
+	void SprintStop();
+
 	//Function to begin PrimaryAttack
 	void PrimaryAttack();
-
-	//Function to preform Primary Attack
-	void PrimaryAttack_TimeElapsed();
 
 	//Function to begin BlackHoleAttack
 	void BlackHoleAttack();
 
-	//Function to preform BlackholeAttack_TimeElapsed
-	void BlackholeAttack_TimeElapsed();
-
 	//Function to begin Dash
 	void Dash();
-
-	//Function to preform Dash_TimeElapsed
-	void Dash_TimeElapsed();
-
-	void StartAttackEffects();
-
-	// Re-use spawn logic between attacks
-	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
 	//Function to preform interact
 	void PrimaryInteract();
