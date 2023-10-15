@@ -23,6 +23,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		UStaticMeshComponent* MeshComp;
 
+	
 
 public:
 

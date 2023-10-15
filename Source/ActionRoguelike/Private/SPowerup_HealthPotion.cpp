@@ -11,7 +11,6 @@
 
 ASPowerup_HealthPotion::ASPowerup_HealthPotion()
 {
-	//Creates MeshComp Root
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
 	// Disable collision, instead we use SphereComp to handle interaction queries
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -28,7 +27,6 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 	USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(InstigatorPawn);
 
-	
 	// Check if not already at max health
 	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
