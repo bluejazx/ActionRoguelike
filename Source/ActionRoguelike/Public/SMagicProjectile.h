@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "SMagicProjectile.generated.h"
 
+class USActionEffect;
+
 UCLASS()
 class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectileBase // Re-parented from AActor
 {
@@ -14,22 +16,20 @@ class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectileBase // Re-pare
 
 protected:
 
-	//Editable in BP in Damage
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	//Variable for DamageAmount
 	float DamageAmount;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag ParryTag;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<USActionEffect> BurningActionClass;
 	
 	UFUNCTION()
-	//Function on Overlap Event
 	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 
 public:
-	// Sets default values
 	ASMagicProjectile();
 
 
