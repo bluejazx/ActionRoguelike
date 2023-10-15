@@ -44,7 +44,7 @@ protected:
 	//Visible in editor BP readable in components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "components")
 	//adds universal attribute class to SCharacter
-	USAttributeComponent* AttrributeComp;
+	USAttributeComponent* AttributeComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USActionComponent* ActionComp;

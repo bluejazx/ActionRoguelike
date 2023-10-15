@@ -34,7 +34,7 @@ ASCharacter::ASCharacter()
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
 	//Creates AttributeComp
-	AttrributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
 	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 
@@ -53,7 +53,7 @@ void ASCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	AttrributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
 FVector ASCharacter::GetPawnViewLocation() const
@@ -95,7 +95,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::HealSelf(float Amount /* = 100 */)
 {
-	AttrributeComp->ApplyHealthChange(this, Amount);
+	AttributeComp->ApplyHealthChange(this, Amount);
 }
 
 void ASCharacter::MoveForward(float Value)
