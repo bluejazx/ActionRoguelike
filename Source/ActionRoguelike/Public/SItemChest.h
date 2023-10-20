@@ -23,6 +23,11 @@ public:
 	void Interact_Implementation(APawn* InstigatorPawn);
 
 protected:
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly) // RepNotify
+	bool bLidOpened;
+
+	UFUNCTION()
+	void OnRep_LidOpened();
 
 	//VisibleAnywhere readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
