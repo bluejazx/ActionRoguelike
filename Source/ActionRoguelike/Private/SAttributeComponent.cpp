@@ -3,17 +3,20 @@
 
 #include "SAttributeComponent.h"
 #include "SGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplier"), 1.0f, TEXT("Global Damage Modifier for Attribute Component."), ECVF_Cheat);
 
 
-// Sets default values for this component's properties
+
 USAttributeComponent::USAttributeComponent()
 {
-	//Sets HealthMax and Health
+	
 	HealthMax = 100;
 	Health = HealthMax;
+
+	SetIsReplicatedByDefault(true);
 }
 
 bool USAttributeComponent::Kill(AActor* InstigatorActor)
@@ -23,13 +26,13 @@ bool USAttributeComponent::Kill(AActor* InstigatorActor)
 
 bool USAttributeComponent::IsAlive() const
 {
-	//True while
+	
 	return Health > 0.0f;
 }
 
 bool USAttributeComponent::IsFullHealth() const
 {
-	//checks if health is at max
+	
 	return Health == HealthMax;
 }
 
@@ -58,15 +61,19 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		Delta *= DamageMultiplier;
 	}
 
-	//Sets old health
+	
 	float OldHealth = Health;
 
-	//Sets current health to add delta clamped between 0 and max health
+	
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
-	//Subtracts old health form max health to get delta
+	
 	float ActualDelta = Health - OldHealth;
-	OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
+	//OnHealthChanged.Broadcast(InstigatorActor, this, Health, ActualDelta);
+	if (ActualDelta != 0.0f)
+	{
+		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+	}
 
 	//Died
 	if (ActualDelta < 0.0f && Health == 0.0f)
@@ -100,5 +107,19 @@ bool USAttributeComponent::IsActorAlive(AActor* Actor)
 	}
 
 	return false;
+}
+
+void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
+{
+	OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
+}
+
+void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(USAttributeComponent, Health);
+	DOREPLIFETIME(USAttributeComponent, HealthMax);
+	//DOREPLIFETIME_CONDITION(USAttributeComponent, HealthMax, COND_InitialOnly);
 }
 

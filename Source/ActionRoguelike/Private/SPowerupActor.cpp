@@ -14,6 +14,8 @@ ASPowerupActor::ASPowerupActor()
 
 	//10 sec re-spawn
 	RespawnTime = 10.0f;
+
+	SetReplicates(true);
 }
 
 
