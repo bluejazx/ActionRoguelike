@@ -10,6 +10,7 @@
 class UEnvQuery;
 class UEnvQueryInstanceBlueprintWrapper;
 class UCurveFloat;
+class USSaveGame;
 
 /**
  *
@@ -19,25 +20,25 @@ class ACTIONROGUELIKE_API ASGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-protected:
+	protected:
+
+	FString SlotName;
+
+	UPROPERTY()
+	USSaveGame* CurrentSaveGame;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	//minion thats spawned
 	TSubclassOf<AActor> MinionClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	//EQS find spawn
 	UEnvQuery* SpawnBotQuery;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	//Increases number of bots spawned overtime
 	UCurveFloat* DifficultyCurve;
 
-	//after EQS is run
 	FTimerHandle TimerHandle_SpawnBots;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	//Variable for time in between spawns
 	float SpawnTimerInterval;
 
 	// Read/write access as we could change this as our difficulty increases via Blueprint
@@ -60,7 +61,6 @@ protected:
 	int32 DesiredPowerupCount;
 
 	UFUNCTION()
-	//runs after timer
 	void SpawnBotTimerElapsed();
 
 	UFUNCTION()
@@ -74,12 +74,23 @@ protected:
 
 public:
 
-	virtual void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
 	ASGameModeBase();
 
+	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 	virtual void StartPlay() override;
+
+	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
 
 	UFUNCTION(Exec)
 	void KillAll();
+
+
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	void WriteSaveGame();
+
+	void LoadSaveGame();
+
 };

@@ -16,7 +16,6 @@ class USGameplayInterface : public UInterface
 /**
  *
  */
-//The purpose of this interface is to create a share API that allows for things like interacting / looting obejects in the world / level
 class ACTIONROGUELIKE_API ISGameplayInterface
 {
 	GENERATED_BODY()
@@ -24,9 +23,10 @@ class ACTIONROGUELIKE_API ISGameplayInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	
-	//BluePrintNativeEvent Allows for implementation in both Blueprint and C++
-	UFUNCTION(BluePrintCallable, BluePrintNativeEvent)
-	//Calls Interact
+	/* Called after the Actor state was restored from a SaveGame file. */
+	UFUNCTION(BlueprintNativeEvent)
+	void OnActorLoaded();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Interact(APawn* InstigatorPawn);
 };

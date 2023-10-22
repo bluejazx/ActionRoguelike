@@ -7,40 +7,38 @@
 #include "SGameplayInterface.h"
 #include "SItemChest.generated.h"
 
+class UStaticMeshComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASItemChest : public AActor, public ISGameplayInterface
 {
 	GENERATED_BODY()
+
 public:
 
-	//Allows for this to be viewed and change in the editor
 	UPROPERTY(EditAnywhere)
-	//Variable for target pitch once Chest is fully opened
 	float TargetPitch;
-	
-	//Implements the ISGameplayInterface into SItemChest
+
 	void Interact_Implementation(APawn* InstigatorPawn);
 
+	void OnActorLoaded_Implementation();
+
 protected:
-	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly) // RepNotify
-	bool bLidOpened;
+
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly, SaveGame) // RepNotify
+		bool bLidOpened;
 
 	UFUNCTION()
 	void OnRep_LidOpened();
 
-	//VisibleAnywhere readable in BP
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//Physical component 
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
-	//VisibleAnywhere readable in BP
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//Physical component 
 	UStaticMeshComponent* LidMesh;
 
-public:
+public:	
+
 	// Sets default values for this actor's properties
 	ASItemChest();
-
 };
